@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8;"/>
+
+	<title>英文文本詞彙統計工具</title>
+
+	<!-- DOCUSKY WIDGET API: https://docusky.org.tw/Docusky v.s. ../.. -->
+	<script src="https://docusky.org.tw/Docusky/js/jquery.min.js"></script>
+	<script src="https://docusky.org.tw/Docusky/js.ui/docusky.ui.getDbCorpusDocumentsSimpleUI.js"></script>
+
+	<!-- ASSETS -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.5/pagination.min.js"></script>
+
+	<!-- CSS FILE -->
+	<link href="css/main-style.css" type="text/css" rel="stylesheet">
+	<link href="css/stat-style.css" type="text/css" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.5/pagination.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+
+	<div class="header">
+		<span></span>
+		<h1 style="margin: 0;">英文文本詞彙統計工具</h1>
+		<span id="language-button">English</span>
+	</div>
+
+	<div class="body">
+
+		<!-- load corpus -->
+		<div id="load">
+			<h2>載入英文文本</h2>
+
+			<!-- load buttons -->
+			<button id="getDocuSkyDocs" type="button" class="btn btn-info">從 DocuSky 載入</button>
+			<label>
+				<div id="uploadXMLBtn" type="button" class="btn btn-info">上傳 xml 檔</div>
+				<input id="uploadXML" type="file" accept=".xml" style="display: none;" multiple>
+			</label>
+			<button id="uploadTXTBtn" type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-corpus-name">上傳 txt 檔</button>
+			<input id="uploadTXT" type="file" accept=".txt" style="display: none;" multiple>
+
+			<!-- corpus name modal -->
+			<div class="modal fade" id="modal-corpus-name" tabindex="-1" role="dialog" aria-labelledby="upload-txt-modal-label" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="upload-txt-modal-label">文獻集名稱</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<input type="text" class="form-control" id="modal-corpus-name-input">
+						</div>
+						<div class="modal-footer">
+							<button id="modal-corpus-name-send" type="button" class="btn btn-info" data-dismiss="modal">送出</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- corpus controller -->
+			<div class="corpus-controller">
+				<h4 id="corpus-tab-corpus-name" style="display: inline-block;">Corpus Name</h4> - 
+				<h5 id="corpus-tab-current-doc-name" style="display: inline-block;">Document Name</h5>
+				<div id="corpus-tab-page-list-block" style="margin-top: 10px;"></div>
+			</div>
+
+			<!-- corpus content -->
+			<div id="corpus-tab-current-doc-content"></div>
+		</div>
+
+		<!-- select metadata -->
+		<div id="metadata">
+			<h2>詮釋資料</h2>
+			<div id="metadatalist"></div>
+		</div>
+
+		<!-- statistics -->
+		<div id="stat">
+			<h2>詞彙統計</h2>
+
+			<div class="stat-tool">
+
+				<!-- tabs -->
+				<div class="stat-controller">
+					<span class="target" onclick="switchTool(this, 'termfreq')">詞頻</span>
+					<span onclick="switchTool(this, 'termlist')">詞彙清單</span>
+					<span onclick="switchTool(this, 'tag')">標記</span>
+				</div>
+
+				<!-- term freqency tool -->
+				<div id="termfreq" class="tool-content target">
+					
+					<!-- settings -->
+					<div class="stat-setting">
+						<div class="stat-setting-item" style="grid-template-columns: 130px 200px 170px 80px auto;">
+							<span>N-gram 大小</span>
+							<select class="custom-select" id="term-frequency-ngram-size" aria-label="">
+								<option value="1" selected>1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+							</select>
+							
+							<span>是否使用停用詞</span>
+							<input id="term-frequency-remove-stopwords" type="checkbox" data-toggle="toggle" data-onstyle="success">
+							<button id="term-frequency-edit-stopwords" type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-stopwords" style="margin: 0 auto">編輯停用詞清單</button>
+
+							<span>文件範圍</span>
+							<input type="text" class="form-control" id="term-frequency-document-range-input" placeholder="e.g. 1,5,6-10">
+							
+							<span>是否使用詞形還原</span>
+							<input id="term-frequency-use-lemmatization" type="checkbox" data-toggle="toggle" data-onstyle="success">
+						</div>
+
+						<button id="term-frequency-run-button" type="button" class="btn btn-danger" style="margin: 10px auto 0 auto;">開始統計</button>
+
+						<!-- stopwords modal -->
+						<div class="modal fade" id="modal-stopwords" tabindex="-1" role="dialog" aria-labelledby="stopwords-modal-label" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="stopwords-modal-label">停用詞清單</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body">
+										<p id="stopwords-copyright">預設停用詞清單取自：自然語言處理 python 套件 <b>NLTK</b>。</p>
+										<p>Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O'Reilly Media Inc.</p>
+										<textarea class="form-control" id="modal-stopwords-textarea" style="height: 50vh;"></textarea>
+									</div>
+									<div class="modal-footer">
+										<button id="modal-stopwords-save" type="button" class="btn btn-danger" data-dismiss="modal">儲存</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- results -->
+					<div class="results"></div>
+					
+				</div>
+
+				<!-- term list stat tool -->
+				<div id="termlist" class="tool-content">
+					
+					<!-- settings -->
+					<div class="stat-setting">
+						<div class="stat-setting-item" style="grid-template-columns: 100px 200px 170px 80px;">
+							<span>文件範圍</span>
+							<input type="text" class="form-control" id="term-list-document-range-input" placeholder="e.g. 1,5,6-10">
+							
+							<span>是否使用詞形還原</span>
+							<input id="term-list-use-lemmatization" type="checkbox" data-toggle="toggle" data-onstyle="success">
+
+							<span>詞彙清單</span>
+							<div style="text-align: left;">
+								<button id="term-list-edit-button" type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-termlist" style="margin: 4px;">編輯</button>
+								<label style="margin: 4px;">
+									<div id="term-list-upload-button" type="button" class="btn btn-info">上傳 (.txt)</div>
+									<input id="uploadTermList" type="file" accept=".txt" style="display: none;" multiple>
+								</label>
+							</div>
+
+							<span></span>
+							<button id="term-list-run-button" type="button" class="btn btn-danger" style="margin: 0 10px 0 auto;">開始統計</button>
+						</div>
+						
+						<!-- termlist modal -->
+						<div class="modal fade" id="modal-termlist" tabindex="-1" role="dialog" aria-labelledby="termlist-modal-label" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="termlist-modal-label">詞彙清單</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body">
+										<textarea class="form-control" id="modal-termlist-textarea" style="height: 60vh;"></textarea>
+									</div>
+									<div class="modal-footer">
+										<button id="modal-termlist-clear" type="button" class="btn btn-info">清空</button>
+										<button id="modal-termlist-save" type="button" class="btn btn-danger" data-dismiss="modal">儲存</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- results -->
+					<div class="results"></div>
+
+				</div>
+
+				<!-- tag stat tool -->
+				<div id="tag" class="tool-content">
+					
+					<!-- settings -->
+					<div class="stat-setting">
+						<div class="stat-setting-item" style="grid-template-columns: 100px 200px;">
+							<span>文件範圍</span>
+							<input type="text" class="form-control" id="tag-document-range-input" placeholder="e.g. 1,5,6-10">
+						</div>
+						<div class="stat-setting-item" style="grid-template-columns: 100px auto; margin-top: 10px;">
+							<span>標記</span>
+							<div id="taglist"></div>
+						</div>
+						<button id="tag-run-button" type="button" class="btn btn-danger" style="margin: 10px auto 0 auto;">開始統計</button>
+					</div>
+
+					<!-- results -->
+					<div class="results">
+					</div>
+				</div>
+
+				<!-- result modal -->
+				<button id="modal-result-button" data-toggle="modal" data-target="#modal-result" style="position: fixed; left: -100px;"></button>
+				<div class="modal fade" id="modal-result" tabindex="-1" role="dialog" aria-labelledby="result-modal-label" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="result-modal-label">統計結果 (CSV 格式)</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<textarea class="form-control" id="modal-result-textarea" style="height: 60vh; white-space: nowrap;"></textarea>
+							</div>
+							<div class="modal-footer">
+								<button id="modal-result-copy" type="button" class="btn btn-info">複製</button>
+								<button id="modal-result-download" type="button" class="btn btn-info">下載 CSV 檔</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			
+		</div>
+
+	</div>
+
+	<!-- JAVASCRIPT FILE -->
+	<script src="js/globalVar.js"></script>
+	<script src="js/fileLoading.js"></script>
+	<script src="js/dataPreProcessing.js"></script>
+	<script src="js/display.js"></script>
+	<script src="js/toolFunc.js"></script>
+	<script src="js/statsTools.js"></script>
+
+</body>
+
+</html>
+

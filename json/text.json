@@ -1,0 +1,211 @@
+{
+	"toolName": {
+		"zh": "英文文本詞彙統計工具",
+		"en": "English Term Statistics"
+	},
+
+	"language": {
+		"zh": "English",
+		"en": "中文"
+	},
+
+	"load": {
+		"zh": "載入英文文本",
+		"en": "Load English Corpus"
+	},
+
+	"loadBtnDocuSky": {
+		"zh": "從 DocuSky 載入",
+		"en": "Load from DocuSky"
+	}, 
+
+	"loadBtnXML": {
+		"zh": "上傳 XML 檔",
+		"en": "Upload XML Files"
+	},
+
+	"loadBtnTXT": {
+		"zh": "上傳 TXT 檔",
+		"en": "Upload TXT Files"
+	},
+
+	"corpusName": {
+		"zh": "文獻集名稱",
+		"en": "Corpus Name"
+	},
+
+	"metadata": {
+		"zh": "詮釋資料",
+		"en": "Metadata"
+	},
+
+	"statistics": {
+		"zh": "詞彙統計",
+		"en": "Statistics"
+	},
+
+	"termfreq": {
+		"zh": "詞頻",
+		"en": "Term Frequency"
+	},
+
+	"termlist": {
+		"zh": "詞彙清單",
+		"en": "Term List"
+	},
+
+	"tag": {
+		"zh": "標記",
+		"en": "Tag"
+	},
+
+	"ngramSize": {
+		"zh": "N-gram 大小",
+		"en": "N-gram Size"
+	},
+
+	"docRange": {
+		"zh": "文件範圍",
+		"en": "Range"
+	},
+
+	"stopwords": {
+		"zh": "是否使用停用詞",
+		"en": "Stopwords"
+	},
+
+	"editStopwords": {
+		"zh": "編輯停用詞清單",
+		"en": "Edit Stopwords"
+	},
+
+	"stopwordList": {
+		"zh": "停用詞清單",
+		"en": "Stopword List"
+	},
+
+	"stopwordsCopyright": {
+		"zh": "預設停用詞清單取自：自然語言處理 python 套件 <b>NLTK</b>。",
+		"en": "Default stopwords are from <b>NLTK</b> (Python package of Natural Language Processing)."
+	},
+
+	"lemmatization": {
+		"zh": "是否使用詞形還原",
+		"en": "Lemmatization"
+	},
+
+	"uploadTermList": {
+		"zh": "上傳 (.txt)",
+		"en": "Upload (.txt)"
+	},
+
+	"editTermList": {
+		"zh": "編輯",
+		"en": "Edit"
+	},
+
+	"run": {
+		"zh": "開始統計",
+		"en": "Run"
+	},
+
+	"rank1": {
+		"zh": "列出 Top",
+		"en": "List the Top"
+	},
+
+	"rank2": {
+		"zh": "的高頻詞彙",
+		"en": "high-frequency terms"
+	},
+
+	"result": {
+		"zh": "統計結果 (CSV 格式)",
+		"en": "Result in CSV format"
+	},
+
+	"downloadCSV": {
+		"zh": "下載 CSV 檔",
+		"en": "Download CSV"
+	},
+
+	"send": {
+		"zh": "送出",
+		"en": "Send"
+	},
+
+	"save": {
+		"zh": "儲存",
+		"en": "Save"
+	},
+
+	"clear": {
+		"zh": "清空",
+		"en": "Clear"
+	},
+
+	"copy": {
+		"zh": "複製",
+		"en": "Copy"
+	},
+
+	"refresh": {
+		"zh": "刷新",
+		"en": "Refresh"
+	},
+
+	"widgetNotReady": {
+		"zh": "Widget 尚未準備好，請稍等。",
+		"en": "Widget is not ready, please wait."
+	},
+
+	"setTermList": {
+		"zh": "請先設定詞彙清單。",
+		"en": "Please set term list first."
+	},
+
+	"setTag": {
+		"zh": "請至少選擇一個標記。",
+		"en": "Please choolse at least one tag."
+	},
+
+	"copied": {
+		"zh": "已複製內容。",
+		"en": "Content copied."
+	},
+
+	"loadCorpus": {
+		"zh": "請先載入文本。",
+		"en": "Please load corpus first."
+	},
+
+	"paraError": {
+		"zh": "無法抓取分析參數，請洽工程師。",
+		"en": "Cannot get the parameters of analysis, please contact the engineer."
+	},
+
+	"csvStrError": {
+		"zh": "無法產生統計結果 csv，請洽工程師。",
+		"en": "Cannot generate csv string of analysis results, please contact the engineer."
+	},
+
+	"backendError": {
+		"zh": "後端處理錯誤，請提供文本與錯誤出現的操作過程予工程師偵錯。",
+		"en": "Error in backend processing, please provide corpus and procedure of how the error appears for engineer to debug."
+	},
+
+	"modeIDError": {
+		"zh": "分析模式 id 錯誤，請洽工程師。",
+		"en": "Error in ID of analysis mode, please contact the engineer."
+	},
+
+	"docRangeErrorDash": {
+		"zh": "非單件宣告需有「-」符號，且「-」前數字為正整數，此項將忽略。",
+		"en": "Use '-' to define multiple documents in document range setting, and the number before '-' needs to be postive integer. This item will be ignored."
+	},
+
+	"docRangeErrorNum": {
+		"zh": "「-」前數字需比「-」後數字小，此項將忽略。",
+		"en": "The number before '-' needs to be smaller than the number after '-'. This item will be ignored."
+	}
+}

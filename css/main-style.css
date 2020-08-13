@@ -1,0 +1,115 @@
+@font-face {
+	font-family: msjh;
+	src: url("../assets/msjh.eot"),
+		 url("../assets/msjh.woff") format("woff"), 
+		 url("../assets/msjh.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+body {
+	font-family: msjh, sans-serif!important;
+}
+
+body > div {
+	margin-top: 8vh;
+	padding: 2%;
+}
+
+body .fa {
+	height: inherit;
+	display: grid;
+	align-items: center;
+	font-size: x-large;
+	color: #343a40;
+}
+
+body .fa:hover {
+	color: #495561;
+	cursor: pointer;
+}
+
+/* ---------- main ---------- */
+
+.header {
+	position: fixed;
+	z-index: 10;
+	height: 8vh;
+	margin: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	display: grid;
+	grid-template-columns: 150px auto 150px;
+	padding: 0;
+	align-items: center;
+	text-align: center;
+	background-color: #343a40;
+	color: white;
+}
+
+#language-button {
+	width: 100px;
+	margin: auto;
+	padding: 5px;
+	border: 1px solid white;
+	border-radius: 15px;
+}
+
+#language-button:hover {
+	background-color: white;
+	color: #343a40;
+	cursor: pointer;
+}
+
+.body {
+	display: grid;
+	grid-gap: 30px;
+}
+
+.body h2 {
+	font-weight: bold;
+}
+
+/* ---------- load ---------- */
+
+#load > button, 
+#load > label,
+#metadatalist > button,
+#taglist > button,
+.corpus-controller {
+	margin: 5px;
+}
+
+#load label:active,
+#termlist label:active {
+	outline: 0;
+	border-radius: .25rem;
+	box-shadow: 0 0 0 0.2rem rgba(23,162,184,.5);
+}
+
+.paginationjs-page, 
+#corpus-tab-page-list-block .J-paginationjs-go-pagenumber, 
+#corpus-tab-page-list-block .J-paginationjs-go-button {
+	width: 50px;
+}
+
+#corpus-tab-page-list-block .paginationjs-go-input {
+	margin-left: 30px;
+}
+
+#corpus-tab-current-doc-content { 
+	min-height: 10vh; 
+	max-height: 50vh;
+	border: 3px solid #343a40;
+	overflow-y: auto;
+	margin: 10px 5px;
+	padding: 5px;
+}
+
+/* ---------- except load ---------- */
+
+#metadata,
+#stat {
+	display: none;
+}
