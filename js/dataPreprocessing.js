@@ -12,10 +12,8 @@ function parseDocInfo() {
 	// parse every document
 	for (let i = 0; i < _allDocList.length; i++) {
 		let allMeta = parseDocuMetadata(_allDocList[i].docInfo);
-		let [pureText, tag] = clearXML(_allDocList[i].docInfo.docContentXml);
-		save2tool(allMeta, _metadatalist);
-		save2tool(tag, _taglist);
-		_data.push({ 'metadata': allMeta, 'fulltext': pureText, 'tag': tag });
+		let uniformedXML = uniformXML(_allDocList[i].docInfo.docContentXml);
+		saveData2tool(allMeta, uniformedXML);
 	}
 
 	// console.log(_data);
@@ -33,10 +31,8 @@ function parseXML($xml) {
 	for (let i = 1; i < docs.length; i++) {
 		let content = docs[i].split('<doc_content>');
 		let allMeta = parseXMLMetadata(content[0]);
-		let [pureText, tag] = clearXML(content[1].split('</doc_content>')[0]);
-		save2tool(allMeta, _metadatalist);
-		save2tool(tag, _taglist);
-		_data.push({ 'metadata': allMeta, 'fulltext': pureText, 'tag': tag });
+		let uniformedXML = uniformXML(content[1].split('</doc_content>')[0]);
+		saveData2tool(allMeta, uniformedXML);
 	}
 
 	// console.log(_data);
@@ -50,19 +46,38 @@ INPUT: 1) string, TXT data
 --- */
 function parseTXT($text, $filename) {
 	let allMeta = { 'corpus': _corpusName, 'filename': $filename };
-	let [pureText, tag] = clearXML($text);
-	save2tool(allMeta, _metadatalist);
-	save2tool(tag, _taglist);
-	_data.push({ 'metadata': allMeta, 'fulltext': pureText, 'tag': tag });
+	let uniformedXML = uniformXML($text);
+	saveData2tool(allMeta, uniformedXML);
 }
 
 
 /* ---
-save data to global variable (only save key of object to global array)
+save document data to global variable
+INPUT: 1) object, metadata
+	   2) string, xml
+--- */
+function saveData2tool($allMeta, $uniformedXML) {
+	var docID = _data.length;
+	var wID = docID % 10;
+	var tag = extractAllTag($uniformedXML);
+	var pureText = clearAllTag($uniformedXML);
+
+	// save
+	saveList2tool($allMeta, _metadatalist);
+	saveList2tool(tag, _taglist);
+	_data.push({ 'metadata': $allMeta, 'fulltext': pureText, 'tag': tag });
+
+	// call worker
+	workers[wID].postMessage({ text: pureText, docID: docID });
+	wManager[wID].push(docID);
+}
+
+/* ---
+save list data to global variable (only save key of object to global array)
 INPUT: 1) object, saved data
 	   2) array, global variable
 --- */
-function save2tool($data, $container) {
+function saveList2tool($data, $container) {
 	$.each($data, function(key) {
 		if ($container.indexOf(key) < 0) $container.push(key);
 	});
@@ -233,16 +248,13 @@ function parseXMLUdefMetadata($xml) {
 /* ---
 clear all <> tag in xml string
 INPUT: string, xml data
-OUTPUT: 1) string, pure text string
-		2) object, all tags information
+OUTPUT: string, uniformed xml data
 --- */
-function clearXML($xml) {
+function uniformXML($xml) {
 	var result = clearEmptyLine($xml);
 	result = pickDocContent(result);
 	result = uniformChar(result);
-	tag = extractAllTag(result);
-	result = clearAllTag(result);
-	return [result, tag];
+	return result;
 }
 
 
@@ -305,7 +317,9 @@ OUTPUT: string, uniform text
 --- */
 function uniformChar($text) {
 	var text = $text.replace(/&amp;/g, '&');
-	text = text.replace(/\s/g, ' ');
+	text = text.replace(/[“”]/g, '\"');
+	text = text.replace(/[’]/g, '\'');
+	text = text.replace(/[\s]{1,}/g, ' ');
 	return text;
 }
 
@@ -349,13 +363,9 @@ function extractAllTag($xml) {
 		// count
 		if (tag[tagname].hasOwnProperty(tagvalue)) tag[tagname][tagvalue] += 1;
 		else tag[tagname][tagvalue] = 1;
-
-
 	}
 
 	return tag;
 }
-
-
 
 

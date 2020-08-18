@@ -6,8 +6,8 @@ import nltk
 
 # variables
 lemmatizer = WordNetLemmatizer()
-sentSplitWords = [',', '.', ':', ';', '!', '?', '(', ')', '[', ']', '"', '“', '”', '...']
-filterWords = ['``', '\'\'', '\'', '’', '-', '--', '—']
+sentSplitWords = [',', '.', ':', ';', '!', '?', '(', ')', '[', ']', '"', '...']
+filterWords = ['``', '\'\'', '\'', '-', '--', '—']
 concatWords = ['\'s', 'n\'t', '\'ve', '\'re', '\'ll', '\'d', '\'m']
 posDict = {
 	'J': wordnet.ADJ,

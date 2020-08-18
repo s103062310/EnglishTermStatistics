@@ -37,6 +37,10 @@ var _termlist = [];
 var _taglist = [];
 var _metadatalist = [];
 
+// use worker to run nlp
+var workers = [];
+var wManager = [];
+
 
 // * * * * * * * * * * * * * * * * initialization * * * * * * * * * * * * * * * * *
 
@@ -69,6 +73,20 @@ $(document).ready(function() {
 		_language = url.searchParams.get('language');
 		display();
 	}
+
+	// worker
+	for (let i = 0; i < 10; i++) wManager.push([]);
+	for (let i = 0; i < 10; i++) workers.push(new Worker('js/worker-pre.js'));
+	workers.forEach(worker => {
+		worker.addEventListener('message', function($event) {
+			var data = $event.data;
+			var wID = data.docID % 10;
+			var docIndex = wManager[wID].indexOf(data.docID);
+			_data[data.docID]['tokens'] = data.tokens;
+			_data[data.docID]['lemmatokens'] = data.lemmatokens;
+			wManager[wID].splice(docIndex, 1);
+		}, false);
+	});
 });
 
 
@@ -105,6 +123,7 @@ function toggleBtn($this) {
 /* ---
 select YES toggle buttons in specific area
 INPUT: picked area id
+OUTPUT: array, list of user selected items
 --- */
 function pickItemUserSet($id) {
 	var list = [];
@@ -120,6 +139,7 @@ function pickItemUserSet($id) {
 pick top $num term in $table to a list
 INPUT: 1) object, sorted (by frequency) table
 	   2) int, pick top X
+OUTPUT: array, list of top X term
 --- */
 function getTermList($table, $num) {
 	var list = [];
@@ -130,7 +150,8 @@ function getTermList($table, $num) {
 
 /* ---
 convert array to string (split by \n)
-INPUT: array
+INPUT: array in global variable form
+OUTPUT: string for text area
 --- */
 function array2string($arr) {
 	var str = "";
@@ -143,7 +164,8 @@ function array2string($arr) {
 
 /* ---
 convert string to array (split by \n)
-INPUT: string
+INPUT: string in textarea
+OUTPUT: array in global variable form
 --- */
 function string2array($str) {
 	var newArr = []
@@ -155,3 +177,18 @@ function string2array($str) {
 	return newArr;
 }
 
+
+/* ---
+see if document has been sent to worker
+INPUT: int, document id
+OUTPUT: boolean, true => in worker, false => not in worker
+--- */
+function docInWorker($docID) {
+	var flag = false;
+
+	wManager.forEach(quene => {
+		if (quene.indexOf($docID) >= 0) flag = true;
+	});
+
+	return flag;
+}

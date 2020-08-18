@@ -2,6 +2,7 @@
 [Develop Weekly Progress](https://hackmd.io/7Tdia-nGRNus1Ljdzpobvg?view)
 
 > 2020.08.13 | v.1.0  
+> 2020.08.18 | v.1.1 add: purejs nlp & worker  
 
 ## CSS Files
 1. **main-style.css** => for whole tool architecture and load corpus block

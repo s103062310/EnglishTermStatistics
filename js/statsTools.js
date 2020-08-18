@@ -31,65 +31,6 @@ function analyze() {
 
 
 /* ---
-running analysis for one document
-INPUT: int, ith doc (docID)
---- */
-function processNextDoc($i) {
-	
-	// parameter
-	var info = _results[_statID][_blockID].basicInfo;
-	var ngramSize = info.ngramSize;
-	var docRangeUserSet = info.docRangeUserSet;
-	var doRemoveStopwords = info.doRemoveStopwords;
-	var doUseLemmatization = info.doUseLemmatization;
-	var tagUserSet = info.tagUserSet;
-
-	// finish
-	if ($i === docRangeUserSet.length) {
-		summary();
-
-		
-
-		// display reault block
-		displayResult();
-		if (_statID === 'termfreq') displayRank();
-
-	// process ith doc
-	} else {
-
-		// tag statistic
-		if (_statID === 'tag') {
-			tagStat(_data[docRangeUserSet[$i]].tag, tagUserSet, $i);
-			updateProgress($i, docRangeUserSet.length);
-			processNextDoc($i + 1);
-
-		// term statistic
-		} else if (_statID === 'termfreq' || _statID === 'termlist') {
-
-			// call python process
-			$.ajax({
-				url: 'http://127.0.0.1:5000/preprocess/',
-				type: 'GET',
-				data: { 'lemmatize': doUseLemmatization, 'content': _data[docRangeUserSet[$i]].fulltext }
-			})
-			.done(function($data) {		// success: call statistic functions
-				let jsonData = JSON.parse($data);
-				if (_statID === 'termfreq') nGram(jsonData, ngramSize, doRemoveStopwords, $i);
-				else if (_statID === 'termlist') termStat(jsonData, $i);
-				updateProgress($i, docRangeUserSet.length);
-				processNextDoc($i + 1);
-			})
-			.fail(function($data) {		// fail: error msg
-				alert(_text.backendError[_language] + ' (' + ($i+1).toString() + ')');
-			});
-
-		// error
-		} else alert(_text.modeIDError[_language]);
-	}
-}
-
-
-/* ---
 get analysis parameters according to statistics mode
 OUTPUT: parameters (error will return false)
 --- */
@@ -175,104 +116,96 @@ function parseDocRangeUserSet($selector) {
 }
 
 
+/* ---
+running analysis for one document
+INPUT: int, ith doc (docID)
+--- */
+function processNextDoc($i) {
+	console.log('process - ' + $i.toString());
+	
+	// parameter
+	var info = _results[_statID][_blockID].basicInfo;
+	var ngramSize = info.ngramSize;
+	var docRangeUserSet = info.docRangeUserSet;
+	var doRemoveStopwords = info.doRemoveStopwords;
+	var doUseLemmatization = info.doUseLemmatization;
+	var tagUserSet = info.tagUserSet;
+
+	// finish
+	if ($i === docRangeUserSet.length) {
+		summary();
+
+		// display reault block
+		displayResult();
+		if (_statID === 'termfreq') displayRank();
+
+	// process ith doc
+	} else {
+
+		// tag statistic
+		if (_statID === 'tag') {
+			let data = _data[docRangeUserSet[$i]].tag;
+			stats(data, info, $i);
+
+		// term statistic
+		} else if (_statID === 'termfreq' || _statID === 'termlist') {
+			let docID = docRangeUserSet[$i];
+			let data;
+
+			// wait for data
+			if (!_data[docID].hasOwnProperty('tokens')) {
+				if (!docInWorker(docID)) workers[docID % 10].postMessage({ text: _data[docID].fulltext, docID: docID });
+				setTimeout(function() {
+					processNextDoc($i);
+				}, 1000);
+
+			// call statistic functions
+			} else {
+				if (doUseLemmatization) data = _data[docID].lemmatokens;
+				else data = _data[docID].tokens;
+				stats(data, info, $i);
+			}
+
+			/*/ call python process
+			$.ajax({
+				url: 'http://127.0.0.1:5000/preprocess/',
+				type: 'GET',
+				data: { 'lemmatize': doUseLemmatization, 'content': _data[docRangeUserSet[$i]].fulltext }
+			})
+			.done(function($data) {		// success: call statistic functions
+				let jsonData = JSON.parse($data);
+				if (_statID === 'termfreq') nGram(jsonData, ngramSize, doRemoveStopwords, $i);
+				else if (_statID === 'termlist') termStat(jsonData, $i);
+				updateProgress($i, docRangeUserSet.length);
+				processNextDoc($i + 1);
+			})
+			.fail(function($data) {		// fail: error msg
+				alert(_text.backendError[_language] + ' (' + ($i+1).toString() + ')');
+			});*/
+
+		// error
+		} else alert(_text.modeIDError[_language]);
+	}
+}
+
+
 // * * * * * * * * * * * * * * * * statistics * * * * * * * * * * * * * * * * *
 
 
 /* ---
-do n-gram calculation, and save result in global variable
-INPUT: 1) object, 2d array, sentance # x word # in a sentance
-	   2) int, 'n' gram
-	   3) boolean, if use stopwords
-	   4) int, ith doc
---- */
-function nGram($data, $n, $stopwords, $docID) {
-	var tmpResult = {};
-
-	// each sentance
-	for (let s = 0; s < $data.length; s++) {
-		let sentance = $data[s];
-		let ngramWord = [];
-
-		// each word
-		for (let w = 0; w < sentance.length; w++) {
-			let word = sentance[w].toLowerCase();
-
-			// filter uni-gram stopwords
-			if ($stopwords && _stopwords.indexOf(word) >= 0) {
-				ngramWord = [];
-				continue;
-			}
-
-			// filter multi-gram stopwords
-			ngramWord.push(word);
-			if ($stopwords && _stopwords.indexOf(ngramWord.join(' ')) >= 0) {
-				ngramWord = [];
-				continue;
-			}
-
-			// n-gram
-			if (ngramWord.length >= $n) {
-				let ngramText = ngramWord.join(' ');
-				if (tmpResult.hasOwnProperty(ngramText)) tmpResult[ngramText]++;
-				else tmpResult[ngramText] = 1;
-				ngramWord.shift();
-			}
-		}
-	}
-
-	_results.termfreq[_blockID]['doc' + $docID.toString()] = tmpResult;
-}
-
-
-/* ---
-calculating term frequency in list, and save result in global variable
-INPUT: 1) object, 2d array, sentance # x word # in a sentance
-	   2) int, ith doc
---- */
-function termStat($data, $docID) {
-	var tmpResult = {};
-	for (let i = 0; i < _termlist.length; i++) tmpResult[_termlist[i]] = 0;
-
-	// each sentance
-	for (let s = 0; s < $data.length; s++) {
-		let sentance = $data[s].join(' ').toLowerCase();
-
-		// each term
-		for (let t = 0; t < _termlist.length; t++) {
-			let index = sentance.indexOf(_termlist[t], 0);
-
-			// search sentance until no term
-			while (index >= 0) {
-				tmpResult[_termlist[t]]++;
-				index = sentance.indexOf(_termlist[t], index + 1);
-			}
-		}
-	}
-
-	_results.termlist[_blockID]['doc' + $docID.toString()] = tmpResult;
-}
-
-
-/* ---
-calculating tag frequency selected, and save result in global variable
-INPUT: 1) object, 2d array, sentance # x word # in a sentance
-	   2) array, list of selected tags
+call statistic worker
+INPUT: 1) object, structured input string
+	   2) object, analysis information
 	   3) int, ith doc
 --- */
-function tagStat($data, $taglist, $docID) {
-	var tmpResult = {};
-
-	// each sentance
-	$.each($data, function(tagname, tagObj) {
-		if ($taglist.indexOf(tagname) >= 0) {
-			$.each(tagObj, function(text, freq) {
-				let keyStr = text + '-' + tagname;
-				tmpResult[keyStr] = freq;
-			});
-		}
-	});
-
-	_results.tag[_blockID]['doc' + $docID.toString()] = tmpResult;
+function stats($data, $info, $i) {
+	let statsWorker = new Worker('js/worker-stats.js');
+	statsWorker.postMessage({ statID: _statID, info: $info, data: $data, stopwords: _stopwords, termlist: _termlist });
+	statsWorker.addEventListener('message', function($event) {
+		_results[_statID][_blockID]['doc' + $i.toString()] = $event.data;
+		updateProgress($i, $info.docRangeUserSet.length);
+		processNextDoc($i + 1);
+	}, false);
 }
 
 

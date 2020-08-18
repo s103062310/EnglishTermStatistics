@@ -175,14 +175,22 @@ function deleteResult($this) {
 
 
 /* ---
-delete result block
+refresh rank size and statistics results
 INPUT: clicked html obj
 --- */
 function refreshResult($this) {
+
+	// parse id
 	var id = $($this.parentElement.parentElement.parentElement.parentElement).attr('id');
 	_statID = id.split('-')[0];
 	_blockID = parseInt(id.split('-')[1]);
-	_results[_statID][_blockID].basicInfo.rankSize = $($this.parentElement).find('input').val();
+
+	// rank size
+	var rank = $($this.parentElement).find('input').val();
+	var sortedLen = _results[_statID][_blockID]['sorted'].length;
+	_results[_statID][_blockID].basicInfo.rankSize = (rank > sortedLen) ?sortedLen :rank;
+
+	// re-run
 	displayResult();
 }
 
