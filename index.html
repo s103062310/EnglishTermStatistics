@@ -4,11 +4,11 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8;"/>
 
-	<title>英文文本詞彙統計工具</title>
+	<title>拼音文本詞彙統計工具</title>
 
 	<!-- DOCUSKY WIDGET API: https://docusky.org.tw/Docusky v.s. ../.. -->
-	<script src="https://docusky.org.tw/Docusky/js/jquery.min.js"></script>
-	<script src="https://docusky.org.tw/Docusky/js.ui/docusky.ui.getDbCorpusDocumentsSimpleUI.js"></script>
+	<script src="../../packages/jquery/v.2.2.4/jquery.min.js"></script>
+	<script src="../../js.ui/docusky.ui.getDbCorpusDocumentsSimpleUI.js"></script>
 
 	<!-- ASSETS -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -16,27 +16,28 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.5/pagination.min.js"></script>
 
 	<!-- CSS FILE -->
-	<link href="css/main-style.css" type="text/css" rel="stylesheet">
-	<link href="css/stat-style.css" type="text/css" rel="stylesheet">
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.5/pagination.css" type="text/css" rel="stylesheet">
+	<link href="css/main-style.css" type="text/css" rel="stylesheet">
+	<link href="css/stat-style.css" type="text/css" rel="stylesheet">
 </head>
 
 <body>
 
 	<div class="header">
 		<span></span>
-		<h1 style="margin: 0;">英文文本詞彙統計工具</h1>
-		<span id="language-button">English</span>
+		<h1 style="margin: 0;">拼音文本詞彙統計工具</h1>
+		<span id="explain" class="header-button">使用說明</span>
+		<span id="language" class="header-button">English</span>
 	</div>
 
 	<div class="body">
 
 		<!-- load corpus -->
 		<div id="load">
-			<h2>載入英文文本</h2>
+			<h2>載入文本</h2>
 
 			<!-- load buttons -->
 			<button id="getDocuSkyDocs" type="button" class="btn btn-info">從 DocuSky 載入</button>
@@ -119,7 +120,7 @@
 							<span>文件範圍</span>
 							<input type="text" class="form-control" id="term-frequency-document-range-input" placeholder="e.g. 1,5,6-10">
 							
-							<span>是否使用詞形還原</span>
+							<span>是否使用詞形還原 (限英文)</span>
 							<input id="term-frequency-use-lemmatization" type="checkbox" data-toggle="toggle" data-onstyle="success">
 						</div>
 
@@ -162,7 +163,7 @@
 							<span>文件範圍</span>
 							<input type="text" class="form-control" id="term-list-document-range-input" placeholder="e.g. 1,5,6-10">
 							
-							<span>是否使用詞形還原</span>
+							<span>是否使用詞形還原 (限英文)</span>
 							<input id="term-list-use-lemmatization" type="checkbox" data-toggle="toggle" data-onstyle="success">
 
 							<span>詞彙清單</span>

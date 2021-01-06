@@ -1,8 +1,8 @@
 @font-face {
 	font-family: msjh;
-	src: url("../assets/msjh.eot"),
-		 url("../assets/msjh.woff") format("woff"), 
-		 url("../assets/msjh.ttf") format("truetype");
+	src: url("../../../fonts/msjh/msjh.eot"),
+		 url("../../../fonts/msjh/msjh.woff") format("woff"), 
+		 url("../../../fonts/msjh/msjh.ttf") format("truetype");
 	font-weight: normal;
 	font-style: normal;
 }
@@ -40,15 +40,15 @@ body .fa:hover {
 	left: 0;
 	right: 0;
 	display: grid;
-	grid-template-columns: 150px auto 150px;
-	padding: 0;
+	grid-template-columns: 240px auto 120px 120px;
+	padding: 0 10px;
 	align-items: center;
 	text-align: center;
 	background-color: #343a40;
 	color: white;
 }
 
-#language-button {
+.header-button {
 	width: 100px;
 	margin: auto;
 	padding: 5px;
@@ -56,7 +56,7 @@ body .fa:hover {
 	border-radius: 15px;
 }
 
-#language-button:hover {
+.header-button:hover {
 	background-color: white;
 	color: #343a40;
 	cursor: pointer;

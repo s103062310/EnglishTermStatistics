@@ -1,7 +1,12 @@
 {
 	"toolName": {
-		"zh": "英文文本詞彙統計工具",
-		"en": "English Term Statistics"
+		"zh": "拼音文本詞彙統計工具",
+		"en": "Phonogram Term Statistics"
+	},
+
+	"explain": {
+		"zh": "使用說明",
+		"en": "How to Use"
 	},
 
 	"language": {
@@ -10,8 +15,8 @@
 	},
 
 	"load": {
-		"zh": "載入英文文本",
-		"en": "Load English Corpus"
+		"zh": "載入文本",
+		"en": "Load Corpus"
 	},
 
 	"loadBtnDocuSky": {
@@ -85,13 +90,13 @@
 	},
 
 	"stopwordsCopyright": {
-		"zh": "預設停用詞清單取自：自然語言處理 python 套件 <b>NLTK</b>。",
-		"en": "Default stopwords are from <b>NLTK</b> (Python package of Natural Language Processing)."
+		"zh": "預設<b>英文停用詞清單</b>取自：自然語言處理 python 套件 <b>NLTK</b>。",
+		"en": "Default <b>stopwords for English</b> are from <b>NLTK</b> (Python package of Natural Language Processing)."
 	},
 
 	"lemmatization": {
-		"zh": "是否使用詞形還原",
-		"en": "Lemmatization"
+		"zh": "是否使用詞形還原 (限英文)",
+		"en": "Lemmatization (English Only)"
 	},
 
 	"uploadTermList": {

@@ -3,7 +3,13 @@ This file is responsible for common functions of statistics
 tool. (setting, viewing, downloading)
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-$('#language-button').click(function() {
+
+$('#explain').click(function() {
+	window.open('assets/explain.pdf');
+});
+
+
+$('#language').click(function() {
 	var lan = this.innerText;
 	if (lan === '中文') _language = 'zh';
 	else if (lan === 'English') _language = 'en';

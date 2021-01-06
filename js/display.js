@@ -13,8 +13,9 @@ function display() {
 	$('head title').html(_text.toolName[_language]);
 	$('.header h1').html(_text.toolName[_language]);
 
-	// language btn
-	$('#language-button').html(_text.language[_language]);
+	// header btn
+	$('#explain').html(_text.explain[_language]);
+	$('#language').html(_text.language[_language]);
 
 	// load
 	$('#load h2').html(_text.load[_language]);

@@ -1,8 +1,9 @@
 # EnglishTermStatistics
-[Develop Weekly Progress](https://hackmd.io/7Tdia-nGRNus1Ljdzpobvg?view)
+[Develop Weekly Progress](https://hackmd.io/@DocuSky/rkGzbFGGw)
 
 > 2020.08.13 | v.1.0  
 > 2020.08.18 | v.1.1 add: purejs nlp & worker  
+> 2021.05.19 | v.1.2 fix: update new links  
 
 ## CSS Files
 1. **main-style.css** => for whole tool architecture and load corpus block
