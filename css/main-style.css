@@ -13,6 +13,7 @@ body {
 
 body > div {
 	margin-top: 8vh;
+	margin-bottom: 10vh;
 	padding: 2%;
 }
 
@@ -69,6 +70,18 @@ body .fa:hover {
 
 .body h2 {
 	font-weight: bold;
+}
+
+.footer {
+	width: 100vw;
+	position: fixed;
+	bottom: 0;
+	margin: 0;
+	padding: 1rem;
+	z-index: 10;
+	background-color: #EEE;
+	color: #666;
+	text-align: center;
 }
 
 /* ---------- load ---------- */
