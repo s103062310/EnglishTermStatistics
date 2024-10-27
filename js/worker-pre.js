@@ -5,7 +5,7 @@ for nlp preprocessing.
 
 
 // imclude nlp module
-self.importScripts('https://unpkg.com/compromise');
+self.importScripts('https://unpkg.com/compromise@13.11.4/builds/compromise.js');
 
 
 /* ---

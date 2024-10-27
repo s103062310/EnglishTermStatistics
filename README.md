@@ -5,6 +5,7 @@
 > 2020.08.18 | v.1.1 add: purejs nlp & worker  
 > 2021.05.19 | v.1.2 fix: update new links  
 > 2021.07.17 | v.1.3 add: add footer info  
+> 2024.10.27 | v.1.4 fix: change package url  
 
 ## CSS Files
 1. **main-style.css** => for whole tool architecture and load corpus block
